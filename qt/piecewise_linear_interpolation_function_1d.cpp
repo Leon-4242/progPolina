@@ -27,7 +27,6 @@ void piecewise_linear_interpolation_function_1d::compute_coefficients (
     int n,
     const double *points,
     const double *values,
-    const double *derivatives,
     double *coeffs,
     double * /*workspace*/
     )
@@ -40,9 +39,9 @@ void piecewise_linear_interpolation_function_1d::compute_coefficients (
     coeffs_values[4*i+1] = values[i+n];
 	diff = (values[i+1]-values[i])/(points[i+1]-points[i]);
     coeffs_values[4*i+2] = (3*diff -2*values[i+n]-values[i+n+1])/ (points[i+1]-points[i]);
-	coeffs_values[4*i+3] = (values[i+n]-values[i+n+1]-2*diff)/((points[i+1]-points[i])*(points[i+1]-points[i]));
+	coeffs_values[4*i+3] = (values[i+n]+values[i+n+1]-2*diff)/((points[i+1]-points[i])*(points[i+1]-points[i]));
   }
-
+}
 
 
 
@@ -56,7 +55,6 @@ double piecewise_linear_interpolation_function_1d::compute_interpolated_value (
     ) const
 {
   const double *coeffs_values = coeffs;
-  const double *coeffs_slopes = coeffs + n;
   // using that distribution is uniform:
   double step = (b - a) / (n - 1);
   int i = (int) ((x - a) / step);
@@ -65,7 +63,18 @@ double piecewise_linear_interpolation_function_1d::compute_interpolated_value (
   if (i >= n - 1)
     return coeffs_values[4*(n-1)];
   else
-    return coeffs[4 * i] + (x - points) * (coeffs[4 * i + 1] + ((x - points) * (coeffs[4 * i + 2] + (x - points) * coeffs[4 * i + 3])));
+    return coeffs[4 * i] + (x - points[i]) * (coeffs[4 * i + 1] + ((x - points[i]) * (coeffs[4 * i + 2] + (x - points[i]) * coeffs[4 * i + 3])));
 }
 
+double piecewise_linear_interpolation_function_1d::compute_interpolated_derivative (
+      double ,
+      double ,
+      double ,
+      int ,
+      const double *,
+      const double *
+      ) const
+{
+	assert(false);
+	return 0;
 }

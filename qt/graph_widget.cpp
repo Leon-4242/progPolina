@@ -210,15 +210,15 @@ void graph_widget_t::recompute_y_bounds ()
       double x = window_x_to_graph_x (pixel);
       switch (m_draw_mode)
         {
-        case draw_mode_t::function_first:
+        case draw_mode_t::function_1:
           update_min_max_by_function_value (&m_func, x, m_min_y, m_max_y, first_step);
           update_min_max_by_function_value (&m_Newton_linear_interpolation, x, m_min_y, m_max_y, first_step);
           break;
-        case draw_mode_t::function_second:
+        case draw_mode_t::function_2:
           update_min_max_by_function_value (&m_func, x, m_min_y, m_max_y, first_step);
           update_min_max_by_function_value (&m_piecewise_linear_interpolation, x, m_min_y, m_max_y, first_step);
           break;
-        case draw_mode_t::function_all:
+        case draw_mode_t::function_12:
           update_min_max_by_function_value (&m_func, x, m_min_y, m_max_y, first_step);
           update_min_max_by_function_value (&m_Newton_linear_interpolation, x, m_min_y, m_max_y, first_step);
           update_min_max_by_function_value (&m_piecewise_linear_interpolation, x, m_min_y, m_max_y, first_step);
@@ -421,13 +421,13 @@ void graph_widget_t::paintEvent (QPaintEvent * /* event */)
 
   switch (m_draw_mode)
     {
-    case draw_mode_t::function_first:
+    case draw_mode_t::function_1:
       draw_functions_first (painter);
       break;
-    case draw_mode_t::function_second:
+    case draw_mode_t::function_2:
       draw_functions_second (painter);
       break;
-    case draw_mode_t::function_all:
+    case draw_mode_t::function_12:
       draw_functions_all (painter);
       break;
     case draw_mode_t::residual:

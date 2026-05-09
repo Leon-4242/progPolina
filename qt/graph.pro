@@ -15,7 +15,9 @@ CONFIG(release, debug|release) {
 
 HEADERS = common_defs.h graph_widget.h \
     function_1d.h \
-    piecewise_linear_interpolation_function_1d.h
+    piecewise_linear_interpolation_function_1d.h \
+	Newton_linear_interpolation_function_1d.h
 SOURCES = main.cpp graph_widget.cpp \
     function_1d.cpp \
-    piecewise_linear_interpolation_function_1d.cpp
+    piecewise_linear_interpolation_function_1d.cpp \
+	Newton_linear_interpolation_function_1d.cpp

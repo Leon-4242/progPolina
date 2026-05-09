@@ -1,14 +1,13 @@
+#include "Newton_linear_interpolation_function_1d.h"
 
+#include <cassert>
 
-#include "Newton_interpolation_function_1d.h"
-
-double *Newton_interpolation_function_1d::allocate_workspace (int n) const
+double *Newton_linear_interpolation_function_1d::allocate_workspace () const
 {
-  (void)n;
   return nullptr;
 }
 
-void Newton_interpolation_function_1d::compute_points (int n, double a, double b, double *points)
+void Newton_linear_interpolation_function_1d::compute_points (int n, double a, double b, double *points)
 {
   double d = b - a;
   for (int i = 0; i < n  - 1; i++)
@@ -16,12 +15,12 @@ void Newton_interpolation_function_1d::compute_points (int n, double a, double b
   points[n - 1] = b;
 }
 
-double *Newton_interpolation_function_1d::allocate_coefficients (int n) const
+double *Newton_linear_interpolation_function_1d::allocate_coefficients (int n) const
 {
   return new double[n];
 }
 
-void Newton_interpolation_function_1d::compute_coefficients (
+void Newton_linear_interpolation_function_1d::compute_coefficients (
     int n,
     const double *points,
     const double *values,
@@ -43,10 +42,10 @@ void Newton_interpolation_function_1d::compute_coefficients (
   }
 }
 
-double Newton_interpolation_function_1d::compute_interpolated_value (
+double Newton_linear_interpolation_function_1d::compute_interpolated_value (
     double x,
-    double a,
-    double b,
+    double /*a*/,
+    double /*b*/,
     int n,
     const double *points,
     const double *coeffs
@@ -60,4 +59,17 @@ double Newton_interpolation_function_1d::compute_interpolated_value (
   }
 
   return result;
+}
+
+double Newton_linear_interpolation_function_1d::compute_interpolated_derivative (
+      double ,
+      double ,
+      double ,
+      int ,
+      const double *,
+      const double *
+      ) const
+{
+	assert(false);
+	return 0;
 }

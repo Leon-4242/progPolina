@@ -27,6 +27,15 @@ protected:
       const double *points,
       const double *coeffs
       ) const override;
+ 
+  virtual double compute_interpolated_derivative (
+      double x,
+      double a,
+      double b,
+      int n,
+      const double *points,
+      const double *coeffs
+      ) const override;
 };
 
 #endif // NEWTON_LINEAR_INTERPOLATION_FUNCTION_1D_H

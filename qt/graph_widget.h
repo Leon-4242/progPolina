@@ -85,9 +85,9 @@ private:
   void draw_canvas (QPainter &painter);
   void draw_graph (QPainter &painter, const abstract_function_1d *func);
 
-  void draw_functions_1 (QPainter &painter);
-  void draw_functions_2 (QPainter &painter);
-  void draw_functions_12 (QPainter &painter);
+  void draw_functions_first (QPainter &painter);
+  void draw_functions_second (QPainter &painter);
+  void draw_functions_all (QPainter &painter);
 
   void draw_residuals (QPainter &painter);
   void draw_x_axis (QPainter &painter);
