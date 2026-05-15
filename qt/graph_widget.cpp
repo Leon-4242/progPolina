@@ -344,15 +344,15 @@ void graph_widget_t::draw_functions_first (QPainter &painter)
   painter.setPen (pen_blue);
   draw_graph (painter, &m_Newton_linear_interpolation);
   const double *points = m_Newton_linear_interpolation.get_points();
-	for(int i = 0; i < m_n; i++)
-		{
-			double value = m_Newton_linear_interpolation.evaluate(points[i]);
-			QPoint p = graph_to_window (points[i], value);
-			QPen pen_black(Qt::red, 4, Qt::SolidLine);
-			painter.setPen (pen_black);
-			painter.drawPoint(p);
+  for(int i = 0; i < m_n; i++)
+	{
+		double value = m_Newton_linear_interpolation.evaluate(points[i]);
+		QPoint p = graph_to_window (points[i], value);
+		QPen pen_black(Qt::black, 4, Qt::SolidLine);
+		painter.setPen (pen_black);
+		painter.drawPoint(p);
 
-		}
+	}
 }
 
 void graph_widget_t::draw_functions_second (QPainter &painter)
