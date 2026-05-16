@@ -49,7 +49,7 @@ public:
   virtual double evaluate (double x) const override final;
   virtual double derivative (double x) const override final;
   void set_points (int n, double a, double b, int p, double norm, const abstract_function_1d *func);
-  const double *get points () {return m_points;}
+  const double *get_points () const {return m_points;}
 protected:
   virtual void compute_points (int n, double a, double b, double *points) = 0;
   virtual double *allocate_workspace () const = 0;
