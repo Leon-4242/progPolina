@@ -63,7 +63,7 @@ void graph_widget_t::update_and_print_f_max ()
 
 void graph_widget_t::reset_points ()
 {
-  m_piecewise_linear_interpolation.set_points (m_nx, m_ny, m_a, m_b, m_c, m_d, m_p, m_func_infinity_norm, &m_func);
+  m_Newton_interpolation.set_points (m_nx, m_ny, m_a, m_b, m_c, m_d, m_p, m_func_infinity_norm, &m_func);
   recompute_bounds ();
   update_and_print_f_max ();
   update ();
