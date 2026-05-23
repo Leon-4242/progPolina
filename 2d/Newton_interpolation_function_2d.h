@@ -1,11 +1,11 @@
 // piecewise_linear_interpolation_function_2d.h
 
-#ifndef PIECEWISE_LINEAR_INTERPOLATION_FUNCTION_2D_H
-#define PIECEWISE_LINEAR_INTERPOLATION_FUNCTION_2D_H
+#ifndef NEWTON_INTERPOLATION_FUNCTION_2D_H
+#define NEWTON_INTERPOLATION_FUNCTION_2D_H
 
 #include "function_2d.h"
 
-class piecewise_linear_interpolation_function_2d final : public abstract_interpolation_function_2d
+class Newton_interpolation_function_2d final : public abstract_interpolation_function_2d
 {
 protected:
   virtual void compute_points (int nx, int ny, double a, double b, double c, double d, double *points_x, double *points_y) override;
@@ -35,4 +35,4 @@ protected:
       ) const override;
 };
 
-#endif // PIECEWISE_LINEAR_INTERPOLATION_FUNCTION_2D_H
+#endif // NEWTON_INTERPOLATION_FUNCTION_2D_H
