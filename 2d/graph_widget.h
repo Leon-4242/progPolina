@@ -5,7 +5,7 @@
 
 #include <QWidget>
 #include "function_2d.h"
-#include "piecewise_linear_interpolation_function_2d.h"
+#include "Newton_interpolation_function_2d.h"
 
 typedef double (*func_t) (double);
 
@@ -39,8 +39,8 @@ private:
 
   draw_mode_t m_draw_mode = draw_mode_t::function;
   function_2d m_func;
-  piecewise_linear_interpolation_function_2d m_piecewise_linear_interpolation;
-  residual_function_1d m_piecewise_linear_residual;
+  Newton_interpolation_function_2d m_Newton_interpolation;
+  residual_function_1d m_Newton_residual;
   double m_func_infinity_norm = 0.0;
   double m_f_max = 0.0;
 
