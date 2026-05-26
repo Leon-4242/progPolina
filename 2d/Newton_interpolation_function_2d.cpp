@@ -1,7 +1,5 @@
-#include <math.h>
-#include <assert.h>
-
 #include "Newton_interpolation_function_2d.h"
+#include <assert.h>
 
 double* Newton_interpolation_function_2d::allocate_workspace () const
 {
