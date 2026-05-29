@@ -7,16 +7,22 @@
 #include <QPainterPath>
 #include <math.h>
 
+#define MAX_NXY 300
+
 QString draw_mode_to_string (draw_mode_t draw_mode)
 {
   switch (draw_mode)
   {
   case draw_mode_t::function:
     return QString::fromUtf8 ("Function");
-  case draw_mode_t::approximation:
-    return QString::fromUtf8 ("Approximation");
-  case draw_mode_t::residual:
-    return QString::fromUtf8 ("Residual");
+  case draw_mode_t::approximation_1:
+    return QString::fromUtf8 ("Approximation1");
+  case draw_mode_t::approximation_2:
+    return QString::fromUtf8 ("Approximation2");
+  case draw_mode_t::residual_1:
+    return QString::fromUtf8 ("Residual1");
+  case draw_mode_t::residual_2:
+    return QString::fromUtf8 ("Residual2");
   case draw_mode_t::COUNT:
     assert (false);
     return QString ();
@@ -29,7 +35,8 @@ graph_widget_t::graph_widget_t (QWidget *parent,
                                 double a, double b, double c, double d,
                                 int nx, int ny, int k)
     : QWidget (parent),
-      m_Newton_residual (&m_func, &m_Newton_interpolation)
+      m_Newton_residual (&m_func, &m_Newton_interpolation),
+      m_piecewise_linear_residual (&m_func, &m_piecewise_linear_interpolation)
 {
   m_a = a;
   m_b = b;
@@ -63,7 +70,9 @@ void graph_widget_t::update_and_print_f_max ()
 
 void graph_widget_t::reset_points ()
 {
-  m_Newton_interpolation.set_points (m_nx, m_ny, m_a, m_b, m_c, m_d, m_p, m_func_infinity_norm, &m_func);
+  if (m_nx * m_ny < MAX_NXY)
+    m_Newton_interpolation.set_points (m_nx, m_ny, m_a, m_b, m_c, m_d, m_p, m_func_infinity_norm, &m_func);
+  m_piecewise_linear_interpolation.set_points (m_nx, m_ny, m_a, m_b, m_c, m_d, m_p, m_func_infinity_norm, &m_func);
   recompute_bounds ();
   update_and_print_f_max ();
   update ();
@@ -248,11 +257,19 @@ void graph_widget_t::update_min_max_by_functions_value (
   case draw_mode_t::function:
     update_min_max_by_function_value (&m_func, x, y, min_z, max_z, first_step);
     break;
-  case draw_mode_t::approximation:
+  case draw_mode_t::approximation_1:
     update_min_max_by_function_value (&m_Newton_interpolation, x, y, min_z, max_z, first_step);
+
     break;
-  case draw_mode_t::residual:
+  case draw_mode_t::approximation_2:
+    update_min_max_by_function_value (&m_piecewise_linear_interpolation, x, y, min_z, max_z, first_step);
+    break;
+  case draw_mode_t::residual_1:
     update_min_max_by_function_value (&m_Newton_residual, x, y, min_z, max_z, first_step);
+
+    break;
+  case draw_mode_t::residual_2:
+     update_min_max_by_function_value (&m_piecewise_linear_residual, x, y, min_z, max_z, first_step);
     break;
   case draw_mode_t::COUNT:
     assert (false);
@@ -425,12 +442,20 @@ void graph_widget_t::paintEvent (QPaintEvent * /* event */)
     case draw_mode_t::function:
       draw_graph (painter, &m_func);
       break;
-    case draw_mode_t::approximation:
-      draw_graph (painter, &m_Newton_interpolation);
+    case draw_mode_t::approximation_1:
+      if (m_nx * m_ny < MAX_NXY)
+        draw_graph (painter, &m_Newton_interpolation);
       break;
-    case draw_mode_t::residual:
-      draw_graph (painter, &m_Newton_residual);
+       case draw_mode_t::approximation_2:
+       draw_graph (painter, &m_piecewise_linear_interpolation);
+       break;
+    case draw_mode_t::residual_1:
+       if (m_nx * m_ny < MAX_NXY)
+        draw_graph (painter, &m_Newton_residual);
       break;
+  case draw_mode_t::residual_2:
+    draw_graph (painter, &m_piecewise_linear_residual);
+    break;
     case draw_mode_t::COUNT:
       assert (false);
       break;

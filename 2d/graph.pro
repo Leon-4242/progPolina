@@ -13,9 +13,16 @@ CONFIG(release, debug|release) {
     QMAKE_CXXFLAGS += -O2
 }
 
+
 HEADERS = common_defs.h graph_widget.h \
     function_2d.h \
-    Newton_interpolation_function_2d.h
+    piecewise_linear_interpolation_function_2d.h \
+        Newton_interpolation_function_2d.h
 SOURCES = main.cpp graph_widget.cpp \
     function_2d.cpp \
-    Newton_interpolation_function_2d.cpp
+    piecewise_linear_interpolation_function_2d.cpp \
+        Newton_interpolation_function_2d.cpp
+
+
+
+

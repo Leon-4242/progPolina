@@ -1,7 +1,7 @@
 #include "Newton_interpolation_function_2d.h"
 #include <assert.h>
 
-double* Newton_interpolation_function_2d::allocate_workspace () const
+double* Newton_interpolation_function_2d::allocate_workspace() const
 {
     return nullptr;
 }
@@ -25,9 +25,9 @@ void Newton_interpolation_function_2d::compute_points(
     compute_points_1d_uniform(ny, c, d, points_y);
 }
 
-double *Newton_interpolation_function_2d::allocate_coefficients(int nx, int ny) const
+double* Newton_interpolation_function_2d::allocate_coefficients(int nx, int ny) const
 {
-    
+
     return new double[nx * ny];
 }
 
@@ -40,12 +40,12 @@ void Newton_interpolation_function_2d::compute_coefficients(
     double* /*workspace*/
 )
 {
- 
+
     for (int i = 0; i < nx * ny; i++) {
         coeffs[i] = values_in[i];
     }
 
-    
+
     for (int j = 0; j < ny; j++) {
         for (int i = 1; i < nx; i++) {
             for (int k = nx - 1; k >= i; k--) {
@@ -56,7 +56,7 @@ void Newton_interpolation_function_2d::compute_coefficients(
         }
     }
 
-   
+
     for (int i = 0; i < nx; i++) {
         for (int j = 1; j < ny; j++) {
             for (int k = ny - 1; k >= j; k--) {
@@ -84,7 +84,7 @@ double Newton_interpolation_function_2d::compute_interpolated_value(
     {
         for (int j = 0; j < ny; j++)
         {
-          
+
             double product_x = 1.0;
             for (int k = 0; k < i; k++) {
                 product_x *= (x - points_x[k]);
@@ -102,4 +102,12 @@ double Newton_interpolation_function_2d::compute_interpolated_value(
     }
 
     return Pf;
+}
+double Newton_interpolation_function_2d::compute_interpolated_derivative(
+    double, double, double, double, double, double,
+    int, int, const double*, const double*, const double*
+) const
+{
+    assert(false);
+    return 0;
 }
