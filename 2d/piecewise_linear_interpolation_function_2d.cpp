@@ -59,8 +59,8 @@ void piecewise_linear_interpolation_function_2d::compute_coefficients(
 
             double A[16] = {
               1.0,                  0.0,              0.0,                   0.0,
-              -1.0 / hx,            1.0,              1.0 / hx,              0.0,
-              -1.0 / (hx * hx),     -2.0 / hx,        1.0 / (hx * hx),       -1.0 / hx,
+              0.0,                  1.0,                    0.0,                   0.0,
+              -3.0 / (hx * hx),     -2.0 / hx,        3.0 / (hx * hx),       -1.0 / hx,
               2.0 / (hx * hx * hx), 1.0 / (hx * hx),  -2.0 / (hx * hx * hx), 1.0 / (hx * hx)
             };
 
@@ -83,10 +83,10 @@ void piecewise_linear_interpolation_function_2d::compute_coefficients(
                 }
             }
 
-            A[0] = 1.0; A[1] = -1.0 / hy;    A[2] = -1.0 / (hy * hy); A[3] = 2.0 / (hy * hy * hy);
-            A[4] = 0.0; A[5] = 1.0;       A[6] = -2.0 / hy;        A[7] = 1.0 / (hy * hy);
-            A[8] = 0.0; A[9] = 1.0 / hy;  A[10] = 1.0 / (hy * hy); A[11] = -2.0 / (hy * hy * hy);
-            A[12] = 0.0; A[13] = 0.0;     A[14] = -1.0 / hy;       A[15] = 1.0 / (hy * hy);
+            A[0] = 1.0;  A[1] = 0.0;    A[2] = -3.0 / (hy * hy); A[3] = 2.0 / (hy * hy * hy);
+            A[4] = 0.0;  A[5] = 1.0;    A[6] = -2.0 / hy;        A[7] = 1.0 / (hy * hy);
+            A[8] = 0.0;  A[9] = 0.0;    A[10] = 3.0 / (hy * hy); A[11] = -2.0 / (hy * hy * hy);
+            A[12] = 0.0; A[13] = 0.0;   A[14] = -1.0 / hy;       A[15] = 1.0 / (hy * hy);
 
             int index = 16 * (i * (ny - 1) + j);
 
