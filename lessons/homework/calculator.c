@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <assert.h>
+
 typedef double (*func)(double, double);
 
 double sum(double, double);
@@ -41,31 +43,60 @@ int main (void)
 
 
 
-int data_check (operation *number, double *a, double *b)
+int data_check (operation * number, double * a, double * b)
 {
-    int buff = 0;
+	char op = 0;
 
-        printf("Enter the operation number: addition - 1, subtraction - 2, multiplication - 3, division - 4\n");
-        scanf("%d", &buff);
+	printf("Enter expresion:\n");
+	scanf(" %lf %c %lf", a, &op, b);
 
-		if(buff < 1 || buff > 4)
-        {
-             printf("Incorrect operation number\n");
-			 return 1;
-        }
+	if (op != '+' && op != '-' && op != '*' && op != '/')
+	{
+		printf("I don't know this operation :(.\n");
+		return 1;
+	}
 
-			*number = buff;
-	
-        printf("Enter two numbers:\n");
-        scanf("%lf %lf", a, b);
+//TODO: переписать if else в switch, в отдельной функции
 
-		if (*number == DIV && fabs(*b) < 1e-15)
-		{
-			printf("Division by zero\n");
-			return 2;
-		}
-    return 0;
+	if (op == '+') 
+	{
+		*number = SUM;
+	} 
+	else if (op == '-')
+	{
+		*number = SUB;
+	} 
+	else if (op == '*')
+	{
+		*number = MUL;
+	} 
+	else if (op == '/')
+	{
+		*number = DIV;
+	}
+
+	if (*number == DIV && fabs(*b) < 1e-15)
+	{
+		printf("Division by zero\n");
+		return 2;
+	}
+
+	return 0;
 }
+
+//3+8*7-1
+//3 8 7 * + 1 -
+//
+// array [1, 2, 5, 9, 3, 7]
+// list (1)->(2)->(5)->(9)->(3)->(7)
+//
+// list (1)<->(2)<->(5)<->(9)<->(3)<->(7)
+//
+// list (1)->(2)->(5)->(6)->(9)->(3)->(7)
+
+// list (3+8*7-1)
+
+
 
 func function (operation number)
 {
@@ -85,9 +116,10 @@ func function (operation number)
     return div;
 
     default:  
-    return NULL;
+    assert(0);
     }
-    
+
+	return NULL;
 }
 
 double sum(double a, double b)
@@ -99,7 +131,7 @@ double sub(double a, double b)
 {
 	return a-b;
 }
-double mul(double a , double b)
+double mul(double a, double b)
 {
     return a*b;
 }
