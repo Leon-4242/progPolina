@@ -20,6 +20,7 @@ typedef enum OPERATION
 
 int data_check (operation *number, double *a, double *b);
 func function (operation number);
+operation function_op(char op);
 
 int main (void)
 {
@@ -55,25 +56,8 @@ int data_check (operation * number, double * a, double * b)
 		printf("I don't know this operation :(.\n");
 		return 1;
 	}
-
-//TODO: переписать if else в switch, в отдельной функции
-
-	if (op == '+') 
-	{
-		*number = SUM;
-	} 
-	else if (op == '-')
-	{
-		*number = SUB;
-	} 
-	else if (op == '*')
-	{
-		*number = MUL;
-	} 
-	else if (op == '/')
-	{
-		*number = DIV;
-	}
+    
+    *number = function_op(op);
 
 	if (*number == DIV && fabs(*b) < 1e-15)
 	{
@@ -83,19 +67,23 @@ int data_check (operation * number, double * a, double * b)
 
 	return 0;
 }
+operation function_op(char op)
+{
+    switch (op)
+    {
+    case '+' :
+        return SUM;
+    case '-' :
+        return SUB;
+    case '*' :
+        return MUL;
+    case '/' :
+        return DIV;
 
-//3+8*7-1
-//3 8 7 * + 1 -
-//
-// array [1, 2, 5, 9, 3, 7]
-// list (1)->(2)->(5)->(9)->(3)->(7)
-//
-// list (1)<->(2)<->(5)<->(9)<->(3)<->(7)
-//
-// list (1)->(2)->(5)->(6)->(9)->(3)->(7)
-
-// list (3+8*7-1)
-
+    default:
+         assert(0);
+    }
+}
 
 
 func function (operation number)
@@ -139,3 +127,16 @@ double div(double a, double b)
 {
     return a/b;
 }
+
+
+//3+8*7-1
+//3 8 7 * + 1 -
+//
+// array [1, 2, 5, 9, 3, 7]
+// list (1)->(2)->(5)->(9)->(3)->(7)
+//
+// list (1)<->(2)<->(5)<->(9)<->(3)<->(7)
+//
+// list (1)->(2)->(5)->(6)->(9)->(3)->(7)
+
+// list (3+8*7-1)
