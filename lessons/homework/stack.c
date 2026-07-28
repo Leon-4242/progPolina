@@ -8,15 +8,16 @@ typedef struct NODE
 } node;
 
 node * make_node(double);
-void del_node(node *);
+void delete_node(node *);
 
 void add_node(node *, node *);
+node * del_node(node *);
 
 
 int main(void)
 {
 	node * head = make_node(0);
-	del_node(head);
+	delete_node(head);
 	return 0;
 }
 
@@ -30,7 +31,7 @@ node * make_node(double val)
 	return buff;
 }
 
-void del_node(node * curr)
+void delete_node(node * curr)
 {
 	free(curr);
 }
@@ -52,6 +53,17 @@ void add_node(node * parent, node * curr)
 	parent->next = curr;
 }
 
+node * del_node(node * parent, node * curr)
+{
+    if(curr == NULL)
+    {
+        return NULL;
+    }
+        parent->next = curr->next;
+        curr->next = NULL;
+    
+        return curr;
+}
 //TODO: удалить ноду
 // parent->curr->buff
 // если curr == NULL, то ничего не делает
