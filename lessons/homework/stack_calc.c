@@ -1,0 +1,36 @@
+#include "stack.h"
+#include "stdio.h"
+
+int main(void)
+{
+	list * stack = make_list();
+	double a, b, buff1, buff2;
+	char c;
+
+	while (1)
+	{
+		//TODO: добавить проверки, выход из цикла и т.д.
+		scanf(" %lf %lf %c", &a, &b, &c);
+
+		push_back(stack, a);
+		push_back(stack, b);
+
+		func = function(c);
+
+		buff = value(stack);
+		pop_back(stack);
+
+		buff = func(value(stack), buff);
+		pop_back(stack);
+
+		push_back(buff);
+	}
+
+	del_list(stack);
+	return 0;	
+}
+
+//6/3
+// 6 3 /
+//7 8 1 * +
+//7+8*1

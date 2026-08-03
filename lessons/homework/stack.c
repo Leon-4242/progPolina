@@ -1,25 +1,4 @@
-#include <stdio.h>
-#include <malloc.h>
-
-typedef struct NODE
-{
-	double value;
-	struct NODE * next;
-} node;
-
-node * make_node(double);
-void delete_node(node *);
-
-void add_node(node *, node *);
-node * del_node(node *, node *);
-
-
-int main(void)
-{
-	node * head = make_node(0);
-	delete_node(head);
-	return 0;
-}
+#include "stack.h"
 
 node * make_node(double val)
 {
@@ -38,17 +17,6 @@ void delete_node(node * curr)
 
 void add_node(node * parent, node * curr)
 {
-	// if (parent->next == NULL)
-//	if (!parent->next)
-//	{
-//		parent->next = curr;
-//	}
-//	else 
-//	{
-//		curr->next = parent->next;
-//		parent->next = curr;
-//	}
-
 	curr->next = parent->next;
 	parent->next = curr;
 }
@@ -64,7 +32,75 @@ node * del_node(node * parent, node * curr)
     
         return curr;
 }
-//TODO: удалить ноду
+//TODO: убрать из аргументов curr
 // parent->curr->buff
 // если curr == NULL, то ничего не делает
 // если curr != NULL, то parent->buff, а функция вернёт curr
+//
+
+list * make_list(void)
+{
+	list * buff = (list *)malloc(sizeof(list));
+	buff->head = NULL;
+	buff->tail = NULL;
+
+	return buff;
+}
+
+void del_list(list * lst)
+{
+	while (lst->head)
+	{
+		pop_back(lst);
+	}
+	free(lst);
+}
+
+void push_back(list * lst, double value)
+{
+	node * buff = make_node(value);
+	if (lst->tail == NULL)
+	{
+		lst->head = buff;
+	}
+	else 
+	{
+		add_node(lst->tail, buff);
+	}
+
+	lst->tail = buff;
+}
+
+void pop_back(list * lst)
+{
+	if (!lst->head)
+	{
+		return;
+	}
+
+	if (lst->head == lst->tail)
+	{
+		delete_node(lst->tail);
+		lst->head = lst->tail = NULL;
+		return;
+	}
+
+	node * curr = lst->head;
+	while (curr->next != lst->tail)
+	{
+		curr = curr->next;
+	}
+
+	delete_node(del_node(curr, lst->tail));
+	lst->tail = curr;
+}
+
+int empty(list *lst)
+{
+	return ! lst->head;
+}
+
+double value(list * lst)
+{
+	return lst->tail->value;
+}
