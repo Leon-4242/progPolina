@@ -13,7 +13,7 @@ node * make_node(double);
 void delete_node(node *);
 
 void add_node(node *, node *);
-node * del_node(node *, node *);
+node * del_node(node *);
 
 typedef struct LIST
 {
