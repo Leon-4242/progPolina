@@ -21,12 +21,14 @@ void add_node(node * parent, node * curr)
 	parent->next = curr;
 }
 
-node * del_node(node * parent, node * curr)
+node * del_node(node * parent)
 {
-    if(curr == NULL)
+    if(parent->next == NULL)
     {
         return NULL;
     }
+		node * curr;
+		curr = parent->next;
         parent->next = curr->next;
         curr->next = NULL;
     
