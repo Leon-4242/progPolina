@@ -42,7 +42,7 @@ int main (void)
 {
     list * stack = make_list();
     operation number = SUM;
-    double a = 0, b = 0, buff = 0;
+    double a, b, buff = 0;
     func f;
 
     while (1)
