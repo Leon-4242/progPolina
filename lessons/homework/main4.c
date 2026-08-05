@@ -4,7 +4,6 @@ int function(FILE *in);
 
 int main(void)
 {
-    double result;
 
     FILE *in = fopen("input.txt", "r");
     if (in == NULL)
