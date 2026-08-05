@@ -5,26 +5,21 @@
 double function (FILE *file);
 int main (void)
 {
-    double result;
-    FILE *in;
-    in = fopen("input.txt", "r");
+    FILE *in = fopen("input.txt", "r");
     if(in == NULL)
     {
         printf("Error input\n");
         return 1;
     }
-    result = function(in);
-    fclose(in);
 
-
-    FILE *out;
-    out = fopen("output.txt", "w");
+    FILE *out = fopen("output.txt", "w");
     if(out == NULL)
     {
         printf("Error output\n");
         return 2;
     }
-    fprintf(out, "%lf\n", result);
+    fprintf(out, "%lf\n", function(in));
+    fclose(in);
     fclose(out);
 
     return 0;
