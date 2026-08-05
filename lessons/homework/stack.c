@@ -93,7 +93,7 @@ void pop_back(list * lst)
 		curr = curr->next;
 	}
 
-	delete_node(del_node(curr, lst->tail));
+	delete_node(del_node(curr));
 	lst->tail = curr;
 }
 
