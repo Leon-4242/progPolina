@@ -4,7 +4,6 @@ double function(FILE *in);
 
 int main(void)
 {
-    double result;
 
     FILE *in = fopen("input.txt", "r");
     if (in == NULL)
@@ -12,9 +11,7 @@ int main(void)
         printf("Error input\n");
         return 1;
     }
-
-    result = function(in);
-    fclose(in);
+    
 
     FILE *out = fopen("output.txt", "w");
     if (out == NULL)
@@ -23,7 +20,8 @@ int main(void)
         return 2;
     }
 
-    fprintf(out, "%lf\n", result);
+    fprintf(out, "%lf\n", function(in));
+    fclose(in);
     fclose(out);
 
     return 0;
