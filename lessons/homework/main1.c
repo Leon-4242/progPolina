@@ -1,33 +1,39 @@
 #include <stdio.h>
 
-double function(FILE *in);
+int function(FILE* in, double* res);
 
 int main(void)
 {
+    double res = 0;
 
     FILE *in = fopen("input.txt", "r");
     if (in == NULL)
     {
         printf("Error input\n");
-        return 1;
+        return -1;
     }
     
+
+   if (!function(in, &res))
+    {
+        return -2; 
+    }
 
     FILE *out = fopen("output.txt", "w");
     if (out == NULL)
     {
         printf("Error output\n");
-        return 2;
+        return -3;
     }
 
-    fprintf(out, "%lf\n", function(in));
-    fclose(in);
+    fprintf(out, "%lf\n", res);
+    fclose(in); 
     fclose(out);
 
     return 0;
 }
 
-double function(FILE *in)
+int function(FILE* in, double* res)
 {
     double a, sum = 0;
     int count = 0;
@@ -44,5 +50,6 @@ double function(FILE *in)
         return 0; 
     }
 
-    return sum / count;
+    *res = sum / count;
+    return 1;
 }
