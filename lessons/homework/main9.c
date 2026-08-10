@@ -10,7 +10,7 @@ int main(void)
     
     FILE* in;
     FILE* out;
-    double c1, c2, c3, b = 0;
+    double c1 = 0, c2 = 0, c3 = 0, b = 0;
 
     printf("Enter c1 c2 c3 b:\n");
 
@@ -50,7 +50,7 @@ int main(void)
 
 int function(FILE* in, double c1, double c2, double c3, double b)
 {
-    double a1, a2, a3 = 0;
+    double a1 = 0, a2 = 0, a3 = 0;
     int flag = 1;
 
     if (fscanf(in, "%lf %lf %lf", &a1, &a2, &a3) == 3)
