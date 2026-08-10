@@ -35,7 +35,7 @@ int main(void)
 
 int function(FILE* in, double* res)
 {
-    double a, sum = 0;
+    double a = 0, sum = 0;
     int count = 0;
 
     while (fscanf(in, "%lf", &a) == 1)
