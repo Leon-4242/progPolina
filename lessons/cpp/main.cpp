@@ -11,7 +11,8 @@ int main()
     double x = 0;
 
     std::cout << "Enter x:\n";
-    if (!(std::cin >> x)) {
+    if (!(std::cin >> x)) 
+    {
         std::cout << "Incorrect data\n";
         return -1;
     }
