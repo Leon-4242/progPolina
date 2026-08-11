@@ -20,13 +20,13 @@ int main()
     std::ifstream in("input.txt");
     if (!in.is_open()) 
     {
-        std::cout << "Error input \n";
+        std::cout << "Error input\n";
         return -2;
     }
     std::ofstream out("output.txt");
     if (!out.is_open()) 
     {
-        std::cout << "Error output \n";
+        std::cout << "Error output\n";
         return -3;
     }
 
