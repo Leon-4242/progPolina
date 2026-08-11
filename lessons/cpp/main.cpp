@@ -32,7 +32,8 @@ int main()
     if (function(in, x)) 
     {
         out << "YES\n";
-    } else 
+    } 
+    else 
     {
         out << "NO\n";
     }
