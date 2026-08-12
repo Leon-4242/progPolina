@@ -70,6 +70,11 @@ int function(FILE *in, double x, double* polinom, double* diff) {
         return 0;
     }
 
+	if (!feof(in))
+	{
+		return 0;
+	}
+
     *polinom = P;
     *diff = diffP;
     return 1;
