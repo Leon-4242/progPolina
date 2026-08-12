@@ -20,7 +20,7 @@ int main()
     std::ifstream in("input.txt");
     if (!in.is_open()) 
     {
-        std::cout << "Error input\n";
+        std::cerr << "Error input\n";
         return -2;
     }
     std::ofstream out("output.txt");
@@ -30,14 +30,7 @@ int main()
         return -3;
     }
 
-    if (function(in, x)) 
-    {
-        out << "YES\n";
-    } 
-    else 
-    {
-        out << "NO\n";
-    }
+	out << (function(in, x) ? "YES" : "NO") << "\n";
 
     in.close();
     out.close();
