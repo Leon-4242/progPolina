@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 
+void quick_sort(double* arr, int left, int right);
 void function(double* arr, int* n);
 
 int main() 
@@ -16,7 +17,7 @@ int main()
 
     if (!(in >> n)) 
     {
-        std::cerr << "Empty file\n";
+        std::cerr << "Empty or invalid file\n";
         in.close();
         return -2;
     }
@@ -29,12 +30,15 @@ int main()
     }
     in.close();
 
+    quick_sort(arr, 0, n - 1);
+
     function(arr, &n);
 
     std::ofstream out("output.txt");
     if (!out.is_open()) 
     {
         std::cerr << "Error output\n";
+        delete[] arr;
         return -3;
     }
 
@@ -49,46 +53,57 @@ int main()
     return 0;
 }
 
-void function(double* arr, int* n) 
+void quick_sort(double* arr, int left, int right) 
 {
+    int i = left;
+    int j = right;
+    double temp = 0;
+    double pivot = arr[left + (right - left) / 2];
 
-    int new_n = 0;
-    int i = 0, j = 0;
-
-    for (i = 0; i < *n; ++i) 
+    while (i <= j) 
     {
-        
-        for (j = 0; j < i; ++j) 
-        {
-            if (arr[i] == arr[j]) 
-            {
-                break;
-            }
-        }
+        while (arr[i] < pivot) 
+        i++;
+        while (arr[j] > pivot) 
+        j--;
 
-        if (j == i) 
+        if (i <= j) 
         {
-            arr[new_n] = arr[i];
-            new_n++;
+
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+
+            i++;
+            j--;
         }
     }
 
-    *n = new_n;
+    if (left < j) 
+    {
+        quick_sort(arr, left, j);
+    } 
+    if (i < right)
+    {
+        quick_sort(arr, i, right);
+    } 
 }
 
-void function_sort(double * arr, int * n)
+void function(double* arr, int* n) 
 {
-	int k = 0;
 
-	for (int i = 0; i < *n - 1; ++i)
-	{
-		if (arr[i] == arr[i+1])
-		{
-			continue;
-		}
+    int k = 0;
 
-		arr[++k] = arr[i+1];
-	}
+    for (int i = 0; i < *n - 1; ++i) 
+    {
+        if (arr[i] == arr[i+1]) 
+        {
+            continue;
+            
+        }
 
-	*n = k+1;
+        arr[k++] = arr[i];
+    }
+    arr[k++] = arr[*n - 1];
+    *n = k; 
 }
