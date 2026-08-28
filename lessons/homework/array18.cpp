@@ -45,11 +45,20 @@ int main()
     return 0;
 }
 
+
 void function(double* arr, int n) 
 {
     arr[0] = 1;
-    for (int k = 1; k <= n; ++k) 
+    for (int i = 1; i <= n; ++i) 
     {
-        arr[k] = arr[k - 1] * (n - k + 1) / k;
+        arr[i] = 0;
+    }
+
+    for (int i = 1; i <= n; ++i) 
+    {
+        for (int j = i; j > 0; --j) 
+        {
+            arr[j] = arr[j] + arr[j - 1];
+        }
     }
 }
