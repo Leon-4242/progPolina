@@ -35,4 +35,17 @@ public:
     std::string print(const LongInt& a) const;
 };
 
+/*
+bool operator== (const LongInt & a, const LongInt & b)
+{
+	...
+}
+
+5+a
+*/
+
+//TODO: 0) доделать операторы с упрощенными условиями
+//		1) добавить оставшиеся операторы для сложений и присвоений
+//		2)  
+
 #endif // LONGINTCLASS_H

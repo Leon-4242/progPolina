@@ -1,5 +1,54 @@
 #include "LongInt.h"
 
+/*
+ *
+//(...).h
+namespace MySpace
+{
+	double func(double, double);
+};
+
+//(...).cpp
+namespace MySpace
+{
+	double func(double a, double b)
+	{
+		return a*b;
+	}
+};
+
+//(...).h
+namespace MySpace
+{
+	double func(double, double);
+};
+
+//(...).cpp
+double MySpace::func(double a, double b)
+{
+	return a*b;
+}
+
+*/
+/*
+#include "(...).h"
+
+using color = int;
+using f = int (*)(int, int);
+
+using namespace MySpace;
+
+int main()
+{
+	std::cout << MySpace::func(2, 3) <<"\n"
+		<< func(2, 3) << std::endl;
+
+	Geometry::Point p(1, 0);
+
+	return 0;
+}
+*/
+
 
     LongInt::LongInt (const int * array, int N, bool neg):
         n(N), 
@@ -157,7 +206,47 @@
         return a < *this; 
     }
 
-
+/*
+ *	operator+ (obj)
+ *	{
+ *		if (*this < 0)
+ *		{
+ *			if (obj < 0)
+ *			{
+ *				return -((-(*this)) + (-obj));
+ *			}
+ *			else
+ *			{
+ *				return obj - (-(*this));
+ *			}
+ *		}
+ *		else
+ *		{
+ *			if (obj < 0)
+ *			{
+ *				return (*this) - (- obj);
+ *			}
+ *		}
+ *
+ *
+ *		...
+ *			
+ *	}
+ *
+ *	operator- (obj)
+ *	{
+ *
+ *		...
+ *
+ *		if (*this < obj)
+ *		{
+ *			return -(obj - (*this));
+ *		}
+ *
+ *		....
+ *	}
+ *
+ */
     LongInt LongInt::operator- () const
     {
         LongInt new_sgn = *this; 
@@ -336,8 +425,20 @@
         delete[] array; 
         return result;
        
-        
+//		array[i] <=> *(array+i)
 
+		if (m != 0) {
+			buff = new int[N-m];
+			for (...)
+				buff[i] = array[i+m];
+
+			delete[] array;
+			array = buff;
+
+			N -= m;	
+		}
+
+		return LongInt(array, N, false);
     }
 
     LongInt LongInt::operator+ (const LongInt & a) const
@@ -436,3 +537,19 @@
             return view() + " > " + a.view();
         }
     }
+
+	std::ofstream & LongInt::operator<< (std::ofstream & out) const \
+	{
+		return out << this->view();
+	}
+
+
+int main(void)
+{
+	LongInt a(5), b(7);
+
+	std::cout << a+b << "\n"
+		<< 14 << std::endl;
+
+	return 0;
+}
