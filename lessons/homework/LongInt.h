@@ -11,41 +11,33 @@ private:
     int n; 
     bool number_is_negative; 
 
-    LongInt(const int* array, int N, bool neg);
-    bool abs_less_abs(const LongInt& a) const;
-    LongInt add_abs(const LongInt& a) const;
-    LongInt sub_abs(const LongInt& a) const;
+    LongInt(int* array, int N, bool neg);
+    bool abs_less_abs(const LongInt & a) const;
+    LongInt add_abs(const LongInt & a) const;
+    LongInt sub_abs(const LongInt & a) const;
 
 public:
     LongInt(int k = 0);
     LongInt(const LongInt& obj);
     ~LongInt();
 
-    LongInt& operator=(const LongInt& obj);
+    LongInt & operator= (const LongInt & obj);
 
-    bool operator==(const LongInt& a) const;
-    bool operator<(const LongInt& a) const;
-    bool operator>(const LongInt& a) const;
-
-    LongInt operator-() const;
-    LongInt operator+(const LongInt& a) const;
-    LongInt operator-(const LongInt& a) const;
+    bool operator== (const LongInt & a) const;
+    bool operator< (const LongInt & a) const;
+    bool operator> (const LongInt & a) const;
+    bool operator<= (const LongInt & a) const;
+    bool operator>= (const LongInt & a) const;
+    
+    LongInt operator+ (const LongInt & a) const;
+    LongInt & operator+= (const LongInt & a);
+    LongInt operator- (const LongInt & a) const;
+    LongInt & operator-= (const LongInt & a);
+    LongInt operator- () const;
+    
 
     std::string view() const;
-    std::string print(const LongInt& a) const;
+    friend std::ostream & operator<< (std::ostream & out, const LongInt & a);
 };
-
-/*
-bool operator== (const LongInt & a, const LongInt & b)
-{
-	...
-}
-
-5+a
-*/
-
-//TODO: 0) доделать операторы с упрощенными условиями
-//		1) добавить оставшиеся операторы для сложений и присвоений
-//		2)  
 
 #endif // LONGINTCLASS_H
