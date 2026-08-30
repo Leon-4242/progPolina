@@ -1,67 +1,13 @@
 #include "LongInt.h"
 
-/*
- *
-//(...).h
-namespace MySpace
-{
-	double func(double, double);
-};
 
-//(...).cpp
-namespace MySpace
-{
-	double func(double a, double b)
-	{
-		return a*b;
-	}
-};
-
-//(...).h
-namespace MySpace
-{
-	double func(double, double);
-};
-
-//(...).cpp
-double MySpace::func(double a, double b)
-{
-	return a*b;
-}
-
-*/
-/*
-#include "(...).h"
-
-using color = int;
-using f = int (*)(int, int);
-
-using namespace MySpace;
-
-int main()
-{
-	std::cout << MySpace::func(2, 3) <<"\n"
-		<< func(2, 3) << std::endl;
-
-	Geometry::Point p(1, 0);
-
-	return 0;
-}
-*/
-
-
-    LongInt::LongInt (const int * array, int N, bool neg):
+    LongInt::LongInt (int * array, int N, bool neg):
+        data(array),
         n(N), 
         number_is_negative(neg)
-    {
-        // Была ошибка : 1 - 999 = -8
-        data = new int[n];
-        for (int i = 0; i < n; ++i)
-        {
-            data[i] = array[i];
-        }
-    }
-
+{
+    
+}
     LongInt::LongInt(int k)
     {
         if (k < 0) 
@@ -132,7 +78,7 @@ int main()
         delete[] data; 
     }
 
-    bool LongInt::operator== (const LongInt & a) const
+    bool LongInt::operator==(const LongInt & a) const
     {
 
         if (number_is_negative != a.number_is_negative)
@@ -206,47 +152,97 @@ int main()
         return a < *this; 
     }
 
-/*
- *	operator+ (obj)
- *	{
- *		if (*this < 0)
- *		{
- *			if (obj < 0)
- *			{
- *				return -((-(*this)) + (-obj));
- *			}
- *			else
- *			{
- *				return obj - (-(*this));
- *			}
- *		}
- *		else
- *		{
- *			if (obj < 0)
- *			{
- *				return (*this) - (- obj);
- *			}
- *		}
- *
- *
- *		...
- *			
- *	}
- *
- *	operator- (obj)
- *	{
- *
- *		...
- *
- *		if (*this < obj)
- *		{
- *			return -(obj - (*this));
- *		}
- *
- *		....
- *	}
- *
- */
+    bool LongInt::operator<= (const LongInt & a) const
+    {
+        return !(a < *this); 
+    }
+
+    bool LongInt::operator>= (const LongInt & a) const
+    {
+        return !(a > *this); 
+    }
+
+
+ 	LongInt LongInt::operator+ (const LongInt & a) const
+ 	{
+ 		if (*this < 0)
+ 		{
+ 			if (a < 0)
+ 		    {
+			    return -((-(*this)) + (-a));
+		    }
+		else
+		{
+			return a - (-(*this));
+		}
+ 	    }
+	    else
+		{
+			if (a < 0)
+			{
+			return (*this) - (- a);
+		    }
+            else
+            {
+              return add_abs(a);
+            }
+	    }
+ 
+			
+	}
+
+    LongInt & LongInt::operator+= (const LongInt & a) 
+    {
+        *this = *this + a;
+        return *this;
+    }
+
+	LongInt LongInt::operator- (const LongInt & a) const
+{
+    if (*this < 0)
+    {
+        if (a < 0)
+        {
+            if (abs_less_abs(a))
+            {
+                return (-a) - (-(*this));
+            }
+            else
+            {
+                return -((-(*this)) - (-a));
+            }
+        }
+        else
+        {
+            return -((-(*this)) + a);
+        }
+    }
+    else
+    {
+        if (a < 0)
+        {
+            return (*this) + (-a);
+        }
+        else
+        {
+            if (abs_less_abs(a))
+            {
+                return -(a.sub_abs(*this));
+            }
+            else
+            {
+                return sub_abs(a);
+            }
+        }
+    }
+}
+
+    LongInt & LongInt::operator-= (const LongInt & a) 
+    {
+        *this = *this - a;
+        return *this;
+    }
+
     LongInt LongInt::operator- () const
     {
         LongInt new_sgn = *this; 
@@ -420,19 +416,19 @@ int main()
         {
             ++m; 
         }
-        // иначе проблемы с удалением памяти
-        LongInt result(array + m, N - m, false);
-        delete[] array; 
-        return result;
-       
-//		array[i] <=> *(array+i)
+    
 
-		if (m != 0) {
-			buff = new int[N-m];
-			for (...)
+		if (m != 0) 
+        {
+			int *buff = new int[N-m];
+
+			for (int i = 0; i < N-1; ++i)
+			{
 				buff[i] = array[i+m];
+			}
 
 			delete[] array;
+
 			array = buff;
 
 			N -= m;	
@@ -441,69 +437,6 @@ int main()
 		return LongInt(array, N, false);
     }
 
-    LongInt LongInt::operator+ (const LongInt & a) const
-    {
-        //a+b
-        if (number_is_negative == a.number_is_negative)
-        {
-            LongInt res = add_abs(a);     
-            res.number_is_negative = number_is_negative; 
-            return res;
-        }
-        //1 + (-2) и -2 + 3
-        if (abs_less_abs(a)) 
-        {
-            LongInt res = a.sub_abs(*this);  //2 - 1 и 3 - 2
-            res.number_is_negative = a.number_is_negative; //-1 и 1
-            return res;
-        }
-        // -2 + 1 и 3 + (-2)
-        else 
-        {
-            LongInt res = sub_abs(a);     // 2 - 1 и 3 - 2
-            res.number_is_negative = number_is_negative;  // -1 и 1
-            return res;
-        }
-    }
-
-    LongInt LongInt::operator- (const LongInt & a) const
-    {
-        // -a - b = -(a+b) и a -(-b) = a+b
-        if (number_is_negative != a.number_is_negative)
-        {
-            LongInt res = add_abs(a);                    
-            res.number_is_negative = number_is_negative;  
-            return res;
-        }
-
-        if (abs_less_abs(a)) 
-        {
-            //1-2 и -1-(-2) 
-            LongInt res = a.sub_abs(*this); // 2 - 1 и 2 -1
-            res.number_is_negative = !number_is_negative;// -1 и 1
-            
-            //a - a
-            if (res.data[0] == 0)
-            {
-                res.number_is_negative = false;
-            }
-
-            return res;
-        }
-        else 
-        {
-            //2 -1 и -2 - (-1)
-            LongInt res = sub_abs(a);   // 2 -1 и 2 -1                   
-            res.number_is_negative = number_is_negative;    // 1 и -1
-            
-            if (res.data[0] == 0)
-            {
-                res.number_is_negative = false;
-            }
-            
-            return res;
-        }
-    }
 
     std::string LongInt::view() const
     {
@@ -522,34 +455,9 @@ int main()
         return res; 
     }
    
-    std::string LongInt::print(const LongInt & a) const
-    {
-        if (*this == a)
-        {
-            return view() + " == " + a.view();
-        }
-        else if (*this < a)
-        {
-            return view() + " < " + a.view();
-        }
-        else
-        {
-            return view() + " > " + a.view();
-        }
-    }
-
-	std::ofstream & LongInt::operator<< (std::ofstream & out) const \
+    std::ostream & operator<< (std::ostream & out, const LongInt & a)  
 	{
-		return out << this->view();
+		return out << a.view();
 	}
 
 
-int main(void)
-{
-	LongInt a(5), b(7);
-
-	std::cout << a+b << "\n"
-		<< 14 << std::endl;
-
-	return 0;
-}
