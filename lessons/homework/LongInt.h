@@ -37,7 +37,9 @@ public:
     
 
     std::string view() const;
-    friend std::ostream & operator<< (std::ostream & out, const LongInt & a);
+    //friend std::ostream & operator<< (std::ostream & out, const LongInt & a);
 };
+
+std::ostream & operator<< (std::ostream & out, const LongInt & a);
 
 #endif // LONGINTCLASS_H

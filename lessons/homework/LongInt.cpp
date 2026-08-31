@@ -191,6 +191,8 @@
 			
 	}
 
+//	X*a = X*a_0 + (X*10) * a/10
+
     LongInt & LongInt::operator+= (const LongInt & a) 
     {
         *this = *this + a;
@@ -202,7 +204,9 @@
     if (*this < 0)
     {
         if (a < 0)
-        {
+        {	
+		//	return -((-(*this)) - (-a));
+
             if (abs_less_abs(a))
             {
                 return (-a) - (-(*this));
@@ -247,11 +251,7 @@
     {
         LongInt new_sgn = *this; 
 
-        if (new_sgn.data[0] == 0)
-        {
-            new_sgn.number_is_negative = false;
-        }
-        else
+		if (new_sgn.data[0] != 0)
         {
             new_sgn.number_is_negative = !new_sgn.number_is_negative; 
         }
@@ -459,5 +459,3 @@
 	{
 		return out << a.view();
 	}
-
-
