@@ -96,7 +96,7 @@ public:
     }
 };
 
-double mass(Shape* obj) 
+double function(Shape* obj) 
 {
     return obj->mass();
 }
@@ -117,15 +117,16 @@ int main()
         Point p[4];
 
         p[0].x = 0; p[0].y = 0;
-        p[1].x = 2; p[1].y = 0;
+        p[1].x = 3; p[1].y = 0;
         p[2].x = 2; p[2].y = 2;
         p[3].x = 0; p[3].y = 2;
 
         ptr = new Polygon(p, 4, 1.2);
     }
 
-    std::cout << "m = " << mass(ptr) << std::endl;
+    std::cout << "m = " << function(ptr) << std::endl;
 
     delete ptr;
+    
     return 0;
 }
