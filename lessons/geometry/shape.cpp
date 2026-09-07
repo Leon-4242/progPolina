@@ -8,6 +8,7 @@ public:
     double x, y;
 //Или конструктор по умолчанию
     Point(double x = 0, double y = 0) : 
+// одной буквой 
     x(x), 
     y(y) 
     {
