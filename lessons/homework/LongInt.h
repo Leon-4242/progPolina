@@ -15,6 +15,9 @@ private:
     bool abs_less_abs(const LongInt & a) const;
     LongInt add_abs(const LongInt & a) const;
     LongInt sub_abs(const LongInt & a) const;
+    LongInt mul_by_10() const;
+    LongInt mul_by_digit(int digit) const;
+    LongInt mul_abs(const LongInt & a) const;
 
 public:
     LongInt(int k = 0);
@@ -34,6 +37,8 @@ public:
     LongInt operator- (const LongInt & a) const;
     LongInt & operator-= (const LongInt & a);
     LongInt operator- () const;
+    LongInt operator* (const LongInt & a) const;
+    LongInt & operator*= (const LongInt & a);
     
 
     std::string view() const;
