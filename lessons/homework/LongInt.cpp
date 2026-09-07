@@ -290,9 +290,10 @@ LongInt & LongInt::operator*= (const LongInt & a)
 
     while (j >= 0)
     {
-        int sum = data[i] + a.data[j] + diff;
-        array[k] = sum % 10;
-        diff = sum / 10;
+		array[k] = data[i]+a.data[j]+diff;
+		diff = array[k] / 10;
+		array[k] %= 10;
+
         --i;
         --j;
         --k;
@@ -403,6 +404,8 @@ LongInt LongInt::mul_by_10() const
 {
     if (data[0] == 0)
     {
+//		return LongInt(0);
+
         int * array = new int[1];
         array[0] = 0;
         return LongInt(array, 1, false);
@@ -491,13 +494,16 @@ LongInt LongInt::mul_abs(const LongInt & a) const
 
         LongInt term = X.mul_by_digit(a0);
 
+		//res += term;
         res = res.add_abs(term);
 
-        
         X = X.mul_by_10();
     }
 
     return res;
+
+	//X*a0 + (X*(a/10))*10
+	//return X.mul_by_digit(a0) + (X.mul_abs(a/10)).mul_by_10();
 }
 
 
