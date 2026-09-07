@@ -13,7 +13,19 @@ public:
     y(y) 
     {
 
-    } 
+    }
+
+/*
+	double X() const
+	{
+		return x;
+	}
+
+	double & X()
+	{
+		return x;
+	}
+*/
 };
 
 class Shape 
@@ -92,6 +104,7 @@ public:
             area += data[i].x * data[next].y - data[next].x * data[i].y;
        }
 // abs(area) / 2 получим int
+// fabs(area) / 2 получим double
         return std::abs(area) / 2;
     }
 };
