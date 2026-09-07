@@ -91,7 +91,7 @@ public:
             int next = (i + 1) % n; // Xn = X0
             area += data[i].x * data[next].y - data[next].x * data[i].y;
        }
-
+// abs(area) / 2 получим int
         return std::abs(area) / 2;
     }
 };
