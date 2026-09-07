@@ -5,12 +5,12 @@ int main()
 {
     LongInt a(12);
     LongInt b(18);
-    LongInt c(-4);
+    LongInt c(-431);
     LongInt d(-27);
-    LongInt e(-3);
-    LongInt f(-3);
+    LongInt e(-99);
+    LongInt f(153);
     LongInt g(9);
-    LongInt h(-19);
+    LongInt h(0);
 
 
     std::cout << "a = " << a << std::endl;
@@ -22,9 +22,13 @@ int main()
     std::cout << "g = " << g << std::endl;
     std::cout << "h = " << h << std::endl;
 
-	std::cout << "c - d = " << c - d << std::endl;
-    std::cout << "e - f = " << e - f << std::endl;
-    std::cout << "g - h = " << g - h << std::endl;
+
+	std::cout << "c * d = " << c * d << std::endl;
+    std::cout << "e * f = " << e * f << std::endl;
+    std::cout << "g * h = " << g * h << std::endl;
+
+
+
 
     return 0;
 }
