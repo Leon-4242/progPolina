@@ -205,16 +205,7 @@
     {
         if (a < 0)
         {	
-		//	return -((-(*this)) - (-a));
-
-            if (abs_less_abs(a))
-            {
-                return (-a) - (-(*this));
-            }
-            else
-            {
-                return -((-(*this)) - (-a));
-            }
+		    return -((-(*this)) - (-a));
         }
         else
         {
@@ -258,109 +249,80 @@
         return new_sgn; 
     }
 
+    LongInt LongInt::operator* (const LongInt & a) const
+{
+    LongInt res = mul_abs(a);
+
+    if (number_is_negative != a.number_is_negative)
+    {
+        if (!(res.n == 1 && res.data[0] == 0))
+        {
+            res.number_is_negative = true;
+        }
+    }
+
+    return res;
+}
+
+LongInt & LongInt::operator*= (const LongInt & a)
+{
+    *this = *this * a;
+    return *this;
+}
+
     LongInt LongInt::add_abs (const LongInt & a) const
 	{
-		int N = (n > a.n ? n : a.n) + 1;
-		int * array = new int[N];
+        if (n < a.n)
+        {
+            return a.add_abs(*this);
+        }
+        int N = n + 1;
+        int * array = new int[N];
+        for (int i = 0; i < N; ++i)
+        {
+            array[i] = 0;
+        } 
 
-		for (int i = 0; i < N; ++i)
-		{
-			array[i] = 0;
-		}
+        int diff = 0;
+        int i = n - 1;  
+        int j = a.n - 1; 
+        int k = N - 1;
 
-		int diff = 0;
+    while (j >= 0)
+    {
+        int sum = data[i] + a.data[j] + diff;
+        array[k] = sum % 10;
+        diff = sum / 10;
+        --i;
+        --j;
+        --k;
+    }
 
-		int i = n-1, j = a.n-1, k = N-1;
+    while (i >= 0)
+    {
+        int sum = data[i] + diff;
+        array[k] = sum % 10;
+        diff = sum / 10;
+        --i;
+        --k;
+    }
 
-		while (i >= 0 && j >= 0)
-		{
-			array[k] = data[i] + a.data[j] + diff;
+    array[0] = diff;
 
-			if (array[k] >= 10)
-			{
-				diff = 1;
-				array[k] %= 10;
-			}
-			else
-			{
-				diff = 0;
-			}
+    if (array[0] == 0)
+    {
+        int * buff = new int[N - 1];
+        for (int i = 0; i < N - 1; ++i)
+        {
+            buff[i] = array[i + 1];
+        }
+        delete[] array;
+        array = buff;
+        --N;
+    }
 
-			--i; 
-			--j;
-			--k;
-		}
-
-		while (i >= 0)
-		{
-			if (diff == 0)
-			{
-				break;
-			}
-
-			array[k] = data[i] + diff;
-
-			if (array[k] >= 10)
-			{
-				diff = 1;
-				array[k] %= 10;
-			}
-			else
-			{
-				diff = 0;
-			}
-
-			--i;
-			--k;
-		}
-
-		while (j >= 0)
-		{
-			if (diff == 0)
-			{
-				break;
-			}
-
-			array[k] = a.data[j] + diff;
-
-			if (array[k] >= 10)
-			{
-				diff = 1;
-				array[k] %= 10;
-			}
-			else
-			{
-				diff = 0;
-			}
-
-			--j;
-			--k;
-		}
-
-		if (diff == 1)
-		{
-			array[0] = diff;
-		}
-		else
-		{
-			int *buff = new int[N-1];
-
-			for (int i = 0; i < N-1; ++i)
-			{
-				buff[i] = array[i+1];
-			}
-
-			delete[] array;
-
-			array = buff;
-
-			buff = nullptr;
-
-			--N;
-		}
-
-		return LongInt(array, N, false);
-	}
+    return LongInt(array, N, false);
+}
 
 
     LongInt LongInt::sub_abs(const LongInt & a) const
@@ -436,6 +398,107 @@
 
 		return LongInt(array, N, false);
     }
+
+LongInt LongInt::mul_by_10() const
+{
+    if (data[0] == 0)
+    {
+        int * array = new int[1];
+        array[0] = 0;
+        return LongInt(array, 1, false);
+    }
+    int N = n+1;
+    int * array = new int[N];
+
+    for (int i = 0; i < N-1; ++i)
+    {
+        array[i] = data[i];
+    }
+    array[N-1] = 0;
+
+    return LongInt(array, N, false);
+}
+
+LongInt LongInt::mul_by_digit(int a) const
+{
+    if (a == 0 || data[0] == 0)
+    {
+        int * array = new int[1];
+        array[0] = 0;
+        return LongInt(array, 1, false);
+    }
+
+    int N = n + 1;
+    int * array = new int[N];
+
+    for (int m = 0; m < N; ++m)
+    {
+        array[m] = 0;
+    }
+
+    int diff = 0;
+    int i = n - 1;
+    int k = N - 1;
+
+    while (i >= 0)
+    {
+        int prod = data[i] * a + diff;
+        array[k] = prod % 10;
+        diff = prod / 10;
+        --i;
+        --k;
+    }
+    array[0] = diff;
+
+    if (array[0] == 0)
+    {
+        int * buff = new int[N - 1];
+        for (int m = 0; m < N - 1; ++m)
+        {
+            buff[m] = array[m + 1];
+        }
+        delete[] array;
+        array = buff;
+        buff = nullptr;
+        --N;
+    }
+
+    return LongInt(array, N, false);
+}
+
+LongInt LongInt::mul_abs(const LongInt & a) const
+{
+    if (data[0] == 0 ||  a.data[0] == 0)
+    {
+        int * array = new int[1];
+        array[0] = 0;
+        return LongInt(array, 1, false);
+    }
+    if (n < a.n)
+    {
+        return a.mul_abs(*this);
+    }
+
+    int * array = new int[1];
+    array[0] = 0;
+    LongInt res(array, 1, false);
+
+    LongInt X = *this;
+
+    for (int i = a.n - 1; i >= 0; --i)
+    {
+        int a0 = a.data[i]; 
+
+        LongInt term = X.mul_by_digit(a0);
+
+        res = res.add_abs(term);
+
+        
+        X = X.mul_by_10();
+    }
+
+    return res;
+}
 
 
     std::string LongInt::view() const
