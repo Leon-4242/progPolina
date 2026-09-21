@@ -91,6 +91,7 @@ int main()
     int number = 0;
     double h = 0; 
     double u1 = 0;
+    func f;
 
     std::cout << "Enter N: ";
     std::cin >> N;
@@ -100,7 +101,7 @@ int main()
     std::cout << "Choose f(x):\n1: exp(x)\n2: exp(x^2)\nEnter 1 or 2: ";
     std::cin >> number;
 
-    func f = (number == 1) ? f1 : f2;
+    f = (number == 1) ? f1 : f2;
 
 
     std::vector<double> u = solve(N, h, u1, f);
