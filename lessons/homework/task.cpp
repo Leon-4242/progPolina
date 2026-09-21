@@ -51,7 +51,7 @@ double trapez_formula(int N, double h, double u1, func f)
     phi = (sum + u[N]/2) * h;
     return phi;
 }
-
+/*
 std::vector<double> solve(int N, double h, double & u1, func f)
 {
     double a = 0;
@@ -84,6 +84,39 @@ std::vector<double> solve(int N, double h, double & u1, func f)
 
     return vector_u(N, h, u1, f);
 }
+*/
+
+std::vector<double> solve(int N, double h, double & u1, func f)
+{
+    double a = 0;
+    double b = h;
+    double phi_u1 = 0;
+    double phi_a = trapez_formula(N, h, a, f);
+    
+    while ((b - a) > EPS)
+    {
+        u1 = (a + b) / 2;
+        phi_u1 = trapez_formula(N, h, u1, f);
+
+        if (std::abs(phi_u1) < EPS)
+        {
+            break;
+        }
+
+        if (phi_a * phi_u1 < 0)
+        {
+            b = u1;
+        }
+        else
+        {
+            a = u1;
+            phi_a = phi_u1;
+        }
+    }
+
+    return vector_u(N, h, u1, f);
+}
+
 
 int main()
 {
