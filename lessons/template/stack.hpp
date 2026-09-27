@@ -7,25 +7,33 @@ class List
 {
 	class Node
 	{
-        public:
+        public:	
 		T value;
 		Node * next;
 	};
 
 	Node * head;
-	Node * tail;
 
-	void Clear (Node * );
+	void Clear(Node * node)
+	{
+		while (node != nullptr)
+		{
+			Node * next_node = node->next;
+			delete node;
+			node = next_node;
+		}
+	}
 
 	public:
 	List()
 	{
-		head = tail = nullptr;
+		head = nullptr;
 	}
 
 	void clear()
 	{
 		this->Clear(head);
+		head = nullptr;
 	}
 
 	~List()
@@ -33,14 +41,43 @@ class List
 		this->clear();
 	}
 
-    void push(T val);
-bool pop();
+    void push(T val)
+	{
+		Node * buff = new Node;
+		buff->value = val;
+		buff->next =  head;
+		head = buff;
 
-bool empty() const;
-T top() const;
+	}
+
+	bool pop()
+	{
+		if (!head)
+		{
+			return false;
+		}
+
+		Node * curr = head;
+		head = head->next;
+		delete curr;
+		return true;
+	}
+
+	bool empty() const
+	{
+		return head == nullptr;
+	}
+
+	T top() const
+	{
+		if (empty())
+		{
+			return T();
+		}
+		return head->value;
+	}
 };
 
 
-#include "stack.cpp"
 
 #endif //STACK_H
