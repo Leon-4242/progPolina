@@ -12,7 +12,6 @@ class Tree
         Node* left;
         Node* right;
 
-        // ИСПРАВЛЕНО: добавлено двоеточие перед списком инициализации
         Node(K k, V val, Node* left, Node* right) :
             Key(k), Value(val), left(left), right(right)
         {
@@ -44,7 +43,8 @@ class Tree
 
     Node* push(Node* curr, K key, V val)
     {
-        if (curr == nullptr) {
+        if (curr == nullptr) 
+        {
             return new Node(key, val, nullptr, nullptr);
         }
 
@@ -56,17 +56,19 @@ class Tree
         {
             curr->right = push(curr->right, key, val);
         }
-        else {
+        else 
+        {
             curr->Value = val;
         }
 
         return curr;
     }
 
-public:
-    Tree()
+    public:
+
+    Tree(): 
+        root(nullptr)
     {
-        root = nullptr;
     }
 
     ~Tree()
