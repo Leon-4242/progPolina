@@ -1,91 +1,52 @@
-#ifndef TREE_H
-#define TREE_H
+#include "tree.hpp"
+#include <vector>
+#include <iostream>
 
-template<typename K, typename V>
-class Tree
+void test()
 {
-    class Node
-    {
-    public:
-        K Key;
-        V Value;
-        Node* left;
-        Node* right;
+	Tree<int, int> tree;
+	for (std::size_t i{}; i < 10000; ++i)
+	{
+		tree.push(i, i);
+	}
 
-        Node(K k, V val, Node* left, Node* right) :
-            Key(k), Value(val), left(left), right(right)
-        {
-        }
-        
-        ~Node() 
-        {
-        }
+	int (*func)(const int&) = [](const int& x){return x*(x+1)/2;};
 
-        bool operator < (const Node& other) const
-        {
-            return Key < other.Key;
-        }
-    };
+	tree.map(func);
 
-    Node* root;
+	for (std::size_t i{}; i < 10000; ++i)
+	{
+		std::cout << tree[i] << std::endl;
+	}
+}
 
-    void clearNode(Node* curr)
-    {
-        if (curr == nullptr) 
-        {
-            return;
-        }
-        
-        clearNode(curr->left);
-        clearNode(curr->right);
-        delete curr;
-    }
+int main()
+{
+	Tree<int, int> tree;
+	tree.push(2, 3);
+	tree.push(1, 4);
+	int buff{};
 
-    Node* push(Node* curr, K key, V val)
-    {
-        if (curr == nullptr) 
-        {
-            return new Node(key, val, nullptr, nullptr);
-        }
+	if (tree.search(1, buff))
+	{
+		std::cout << buff << std::endl;
+	}
+	else
+	{
+		std::cout << "Not found" << std::endl;
+	}
 
-        if (key < curr->Key) 
-        {
-            curr->left = push(curr->left, key, val);
-        } 
-        else if (curr->Key < key) 
-        {
-            curr->right = push(curr->right, key, val);
-        }
-        else 
-        {
-            curr->Value = val;
-        }
+	tree[1] = -3;
 
-        return curr;
-    }
+	if (tree.search(1, buff))
+	{
+		std::cout << buff << std::endl;
+	}
+	else
+	{
+		std::cout << "Not found" << std::endl;
+	}
 
-    public:
 
-    Tree(): 
-        root(nullptr)
-    {
-    }
-
-    ~Tree()
-    {
-        this->clear();
-    }
-
-    void clear()
-    {
-        clearNode(root);
-        root = nullptr;
-    }
-
-    void push(K key, V val)
-    {
-        root = push(root, key, val);
-    }
-}; 
-
-#endif // TREE_H
+	return 0;
+}
