@@ -4,6 +4,7 @@
 
 void test()
 {
+	std::map<int, int> f;
 	Tree<int, int> tree;
 	for (std::size_t i{}; i < 10000; ++i)
 	{

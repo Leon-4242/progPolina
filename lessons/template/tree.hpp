@@ -2,10 +2,10 @@
 #define TREE_H
 
 //TODO:
-//1) bool Tree<K, V>::find(const K&)
-//2) V&/V Tree<K, V>::operator[] (const K&) /const
-//3) void Tree<K, V>::remove(const K&)
-//4*) void Tree<K, V>::map(V (*f)(const K&)) 
+//1) bool Tree<K, V>::find(const K&)                -
+//2) V&/V Tree<K, V>::operator[] (const K&) /const	-
+//3) void Tree<K, V>::remove(const K&)              +
+//4*) void Tree<K, V>::map(V (*f)(const K&))        -
 
 template<typename K, typename V>
 class Tree
@@ -17,9 +17,10 @@ class Tree
 		public:
 
 		Node * left, * right;
+		Node * parent;
 
-		Node(const K& k, const V& val, Node* left, Node* right):
-			Key(k), Value(val), left(left), right(right)
+		Node(const K& k, const V& val, Node* left, Node* right, Node* parent):
+			Key(k), Value(val), left(left), right(right), parent(parent)
 		{
 		}
 		~Node()
@@ -46,8 +47,8 @@ class Tree
         }
 	};
 
- 	void clearNode(Node* curr)
-    {
+	void clearNodeRec(Node* curr)
+	{
         if (curr == nullptr) 
         {
             return;
@@ -56,8 +57,55 @@ class Tree
         clearNode(curr->left);
         clearNode(curr->right);
         delete curr;
-    }
+	}
 
+	void clearNodeIter(Node *)
+	{
+		bool left = true;
+		Node * curr = root;
+		while (curr)
+		{
+			if (curr->left)
+			{
+				//stack.push(curr);
+				prev = curr;
+				left = true;
+				curr = curr->left;
+				continue;
+			}
+			if (curr->right)
+			{
+				//stack.push(curr);
+				prev = curr;
+				left = false;
+				curr = curr->right;
+				continue;
+			}
+
+			//curr = curr->prev;
+			//delete (left ? curr->left : curr->right);
+			
+			delete curr;
+			// curr = stack.pop();
+
+			if (left)
+			{
+				prev->left = nullptr;
+			}
+			else
+			{
+				prev->right = nullptr;
+			}
+			curr = root;
+		}
+	}
+
+ 	void clearNode(Node* curr)
+    {
+		clearNodeRec(curr);
+	}
+
+	//TODO: согласовать с curr->parent
     Node* push(Node* curr, const K& key, const V& val)
     {
         if (curr == nullptr) 
@@ -135,6 +183,60 @@ class Tree
 		}
 	}
 
+
+	void remove_rec(Node* curr, const K& key) const
+	{
+		if (key < curr->key()) 
+        {
+            remove_rec(curr->left, key);
+			return;
+		}
+	   	if (curr->key() < key) 
+        {
+            remove_rec(curr->right, key);
+			return;
+        }
+			
+		Node * buff = curr, * legacy = nullptr; 
+		if (buff->right)
+		{
+			buff = buff->right;
+			while (buff->left)
+			{
+				buff = buff->left;
+			}
+		}
+
+		if (buff == root)
+		{
+			root = nullptr;
+			delete buff;
+		}
+
+		if (buff != curr)
+		{
+			curr->Key() = buff->Key();
+			curr->Value() = buff->Value();
+			legacy = buff->right;
+		}
+		else 
+		{
+			legacy = buff->left;
+		}
+
+		if (buff->parent->left == buff)
+		{
+			buff->parent->left = legacy;
+			delete buff;
+		}
+		else
+		{
+			buff->parent->right = legacy;
+			delete buff;
+		}
+
+	}
+
 	Node* root;
 	public:
 	Tree():
@@ -171,6 +273,11 @@ class Tree
 	V operator[] (const K& key) const
 	{
 		return search_SEGFAULT(root, key);
+	}
+
+	void remove (const K& key) 
+	{
+		return remove_rec(root, key);
 	}
 };
 
