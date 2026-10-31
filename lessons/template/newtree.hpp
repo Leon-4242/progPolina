@@ -1,11 +1,14 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include <stdexcept>
+
 //TODO:
-//1) bool Tree<K, V>::find(const K&)                +
-//2) V&/V Tree<K, V>::operator[] (const K&) /const	+?
-//3) void Tree<K, V>::remove(const K&)              +
-//4*) void Tree<K, V>::map(V (*f)(const K&))        -
+//Дописать итератор
+//Согласовать логику size с нашими методами + 
+//+ (возможно) изменить функции на возврат bool
+//Добавить reverse begin; reverse end;
+//Опционально: ещё const begin и const end;
 
 template<typename K, typename V>
 class Tree
@@ -45,6 +48,64 @@ class Tree
         {
             return Key < other.Key;
         }
+	};
+
+	class iterator
+	{
+		Node * curr;
+		std::size_t k;
+		Tree * origin;
+
+		public:
+//		iterator(Node * ...)
+
+		iterator & operator++ ()
+		{
+			if (curr->right != nullptr)
+			{
+				curr = curr->right;
+				while (curr->left)
+				{
+					curr = curr->left;
+				}
+			}
+			else
+			{
+				if (curr->parent == nullptr || curr->parent->right == curr)
+				{
+					return *this;
+				}
+				curr = curr->parent;
+			}
+			++k;
+			return *this;
+		}
+		iterator & operator-- ()
+		{
+			if (curr->left != nullptr)
+			{
+				curr = curr->left;
+				while (curr->right)
+				{
+					curr = curr->right;
+				}
+			}
+			else
+			{
+				if (curr->parent == nullptr || curr->parent->left == curr)
+				{
+					return *this;
+				}
+				curr = curr->parent;
+			}
+			--k;
+			return *this;
+		}
+			
+		std::pair<const K &, V &> operator* ()
+		{
+			return std::pair<const K &, V &> (curr->key(), curr->value());
+		}
 	};
 
 	void clearNodeRec(Node* curr)
@@ -136,81 +197,45 @@ class Tree
         return curr;
     }
 
-    bool find(Node* curr, const K& key)
+	Node * find_example(Node * curr, const K& key)
 	{
 		if (curr == nullptr)
 		{
-			return false;
+			return nullptr;
 		}
 
         if (key < curr->key()) 
         {
-            return search(curr->left, key);
+            return find_example(curr->left, key);
         } 
-        else if (curr->key() < key) 
+        
+		if (curr->key() < key) 
         {
-            return search(curr->right, key);
+            return find_example(curr->right, key);
         }
-        else 
-        {
-			return true;
-		}
+        
+		return curr;
 	}
-
-	bool search(Node* curr, const K& key, V& value)
+	
+	const Node * find_example(const Node * curr, const K& key)
 	{
 		if (curr == nullptr)
 		{
-			return false;
+			return nullptr;
 		}
 
         if (key < curr->key()) 
         {
-            return search(curr->left, key, value);
+            return find(curr->left, key);
         } 
-        else if (curr->key() < key) 
+        
+		if (curr->key() < key) 
         {
-            return search(curr->right, key, value);
+            return find(curr->right, key);
         }
-        else 
-        {
-			value = curr->value();
-			return true;
-		}
+        
+		return curr;
 	}
-
-	V& search_SEGFAULT(Node* curr, const K& key)
-	{
-        if (key < curr->key()) 
-        {
-            return search_SEGFAULT(curr->left, key);
-        } 
-        else if (curr->key() < key) 
-        {
-            return search_SEGFAULT(curr->right, key);
-        }
-        else 
-        {
-			return curr->value();
-		}
-	}
-
-	V search_SEGFAULT(Node* curr, const K& key) const
-	{
-        if (key < curr->key()) 
-        {
-            return search_SEGFAULT(curr->left, key);
-        } 
-        else if (curr->key() < key) 
-        {
-            return search_SEGFAULT(curr->right, key);
-        }
-        else 
-        {
-			return curr->value();
-		}
-	}
-
 
 	void remove_rec(Node* curr, const K& key) const
 	{
@@ -276,10 +301,24 @@ class Tree
 
 	}
 
+	void map_rec(Node * curr, V (*manipulation)(const K&))
+	{
+		if (curr == nullptr)
+		{
+			return;
+		}
+
+		map_rec(curr->left, manipulation);
+		curr->value() = manipulation(curr->key());
+		map_rec(curr->right, manipulation);
+	}
+
+
 	Node* root;
+	std::size_t size;
 	public:
 	Tree():
-		root(nullptr)
+		root(nullptr), size(0)
 	{
 	}
 
@@ -288,54 +327,114 @@ class Tree
 		this->clear();
 	}
 
+	iterator begin() const
+	{
+		Node * curr = root;
+		while (curr && curr->left)
+		{
+			curr = curr->left;
+		}
+
+		return iterator(curr, 0, this);
+	}
+	
+	iterator end() const
+	{
+		return iterator(nullptr, size, this);
+	}
+
+//	cbegin;
+//  rbegin;
+
     void clear()
     {
         clearNode(root);
         root = nullptr;
+		size = 0;
     }
 
     void push(const K& key, const V& val)
     {
         root = push(root, nullptr, key, val);
+		++size;
     }
 
     bool find(const K& key)
 	{
-		return search(root, key);
+		return find_example(root, key) != nullptr;
 	}
 
 	bool search(const K& key, V& value)
 	{
-		return search(root, key, value);
+		Node * buff = find_example(root, key);
+		if (buff != nullptr)
+		{
+			value = buff->value();
+			return true;
+		}
+		return false;
 	}
- // две одинаковые функции 
-	V& operator[] (const K& key)
+
+	V& at (const K& key)
 	{
-        if (find(key))
-        {
-            return search_SEGFAULT(root, key);
-        }
+		Node * buff = find_example(root, key);
+		if (buff != nullptr)
+		{
+			return buff->value();
+		}
 		else
         {
             throw std::out_of_range("key not found");
         }
+	}
+	
+	V at (const K& key) const
+	{
+		Node * buff = find_example(root, key);
+		if (buff != nullptr)
+		{
+			return buff->value();
+		}
+		else
+        {
+            throw std::out_of_range("key not found");
+        }
+	}
+
+ // две одинаковые функции 
+	V& operator[] (const K& key)
+	{
+		Node * buff = find_example(root, key);
+		if (buff == nullptr)
+		{
+			push(key, V());
+			buff = find_example(root, key);
+		}
+
+		return buff->value();
 	}
 
 	V operator[] (const K& key) const
 	{
-		if (find(key))
-        {
-            return search_SEGFAULT(root, key);
-        }
-		else
-        {
-            throw std::out_of_range("key not found");
-        }
+		Node * buff = find_example(root, key);
+		if (buff == nullptr)
+		{
+			push(key, V());
+			buff = find_example(root, key);
+		}
+
+		return buff->value();
 	}
 
 	void remove (const K& key) 
 	{
+		--size;
 		return remove_rec(root, key);
+	}
+
+	void map(V (*f)(const K&))
+	{
+		map_rec(root, f);
 	}
 };
 

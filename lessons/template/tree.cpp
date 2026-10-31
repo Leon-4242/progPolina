@@ -1,10 +1,10 @@
-#include "tree.hpp"
+#include "newtree.hpp"
 #include <vector>
 #include <iostream>
 
 void test()
 {
-	std::map<int, int> f;
+//	std::map<int, int> f;
 	Tree<int, int> tree;
 	for (std::size_t i{}; i < 10000; ++i)
 	{
@@ -48,6 +48,7 @@ int main()
 		std::cout << "Not found" << std::endl;
 	}
 
+	test();
 
 	return 0;
 }
