@@ -2,6 +2,8 @@
 #define TREE_H
 
 #include <stdexcept>
+#include <cstddef> 
+#include <utility>
 
 //TODO:
 //Дописать итератор
@@ -30,9 +32,15 @@ class Tree
 		{
 		}
 
-		K key() const
+		const K& key() const // изменено: было K key() const (возвращало копию, итератор брал на неё ссылку)
 		{
 			return Key;
+		}
+
+		// добавлено: чтобы remove_rec мог поменять ключ
+		void setKey(const K& k)
+		{
+			Key = k;
 		}
 		
 		V& value()
@@ -50,17 +58,26 @@ class Tree
         }
 	};
 
+	public: // добавлено: итератор должен быть виден снаружи
 	class iterator
 	{
 		Node * curr;
 		std::size_t k;
-		Tree * origin;
+		const Tree * origin; // изменено: было Tree *
 
 		public:
-//		iterator(Node * ...)
+		iterator(Node * n, std::size_t k, const Tree * orig): // изменено: const Tree *
+			curr(n),k(k),origin(orig)
+			{
+			}
 
 		iterator & operator++ ()
 		{
+			if (curr == nullptr)
+			{
+				return *this;
+			}
+
 			if (curr->right != nullptr)
 			{
 				curr = curr->right;
@@ -71,9 +88,9 @@ class Tree
 			}
 			else
 			{
-				if (curr->parent == nullptr || curr->parent->right == curr)
+				while (curr->parent != nullptr && curr->parent->right == curr)
 				{
-					return *this;
+					curr = curr->parent;
 				}
 				curr = curr->parent;
 			}
@@ -82,6 +99,16 @@ class Tree
 		}
 		iterator & operator-- ()
 		{
+			if(curr == nullptr)
+			{
+				curr = origin->root;
+				while (curr && curr->right)
+				{
+					curr = curr->right;
+				}
+				--k;
+				return *this;
+			}
 			if (curr->left != nullptr)
 			{
 				curr = curr->left;
@@ -92,9 +119,9 @@ class Tree
 			}
 			else
 			{
-				if (curr->parent == nullptr || curr->parent->left == curr)
+				while (curr->parent != nullptr && curr->parent->left == curr)
 				{
-					return *this;
+					curr = curr->parent;
 				}
 				curr = curr->parent;
 			}
@@ -107,6 +134,7 @@ class Tree
 			return std::pair<const K &, V &> (curr->key(), curr->value());
 		}
 	};
+	private: // добавлено: дальше снова закрытая часть
 
 	void clearNodeRec(Node* curr)
 	{
@@ -197,7 +225,7 @@ class Tree
         return curr;
     }
 
-	Node * find_example(Node * curr, const K& key)
+	Node * find_example(Node * curr, const K& key) const 
 	{
 		if (curr == nullptr)
 		{
@@ -217,27 +245,8 @@ class Tree
 		return curr;
 	}
 	
-	const Node * find_example(const Node * curr, const K& key)
-	{
-		if (curr == nullptr)
-		{
-			return nullptr;
-		}
 
-        if (key < curr->key()) 
-        {
-            return find(curr->left, key);
-        } 
-        
-		if (curr->key() < key) 
-        {
-            return find(curr->right, key);
-        }
-        
-		return curr;
-	}
-
-	void remove_rec(Node* curr, const K& key) const
+	void remove_rec(Node* curr, const K& key) 
 	{
         if(curr == nullptr)
         {
@@ -266,8 +275,8 @@ class Tree
 
 		if (buff != curr)
 		{
-			curr->Key = buff->Key;
-			curr->Value = buff->Value;
+			curr->setKey(buff->key()); // изменено: было curr->Key = buff->Key;
+			curr->value() = buff->value(); // изменено: было curr->Value = buff->Value;
 			legacy = buff->right;
 		}
 		else 
@@ -327,6 +336,10 @@ class Tree
 		this->clear();
 	}
 
+	// добавлено: запрет копирования (иначе два дерева удалят одни и те же узлы)
+	Tree(const Tree &) = delete;
+	Tree & operator= (const Tree &) = delete;
+
 	iterator begin() const
 	{
 		Node * curr = root;
@@ -343,8 +356,23 @@ class Tree
 		return iterator(nullptr, size, this);
 	}
 
-//	cbegin;
-//  rbegin;
+	iterator rbegin() const
+	{
+		Node * curr = root;
+		while (curr && curr->right)
+		{
+			curr = curr->right;
+		}
+
+		return iterator(curr, size - 1, this);
+	}
+
+	iterator rend() const
+	{
+		return iterator(nullptr, (std::size_t) - 1, this);
+	}
+
+
 
     void clear()
     {
@@ -353,18 +381,24 @@ class Tree
 		size = 0;
     }
 
-    void push(const K& key, const V& val)
+    bool push(const K& key, const V& val)
     {
+		if(find(key))
+		{
+			at(key) = val;
+			return false;
+		}
         root = push(root, nullptr, key, val);
 		++size;
+		return true;
     }
 
-    bool find(const K& key)
+    bool find(const K& key) const 
 	{
 		return find_example(root, key) != nullptr;
 	}
 
-	bool search(const K& key, V& value)
+	bool search(const K& key, V& value) const 
 	{
 		Node * buff = find_example(root, key);
 		if (buff != nullptr)
@@ -416,20 +450,18 @@ class Tree
 
 	V operator[] (const K& key) const
 	{
-		Node * buff = find_example(root, key);
-		if (buff == nullptr)
-		{
-			push(key, V());
-			buff = find_example(root, key);
-		}
-
-		return buff->value();
+		return at(key); // изменено: в const-дереве вставлять нельзя, поэтому как at (исключение, если ключа нет)
 	}
 
-	void remove (const K& key) 
+	bool remove (const K& key)
 	{
+		if(!find(key))
+		{
+			return false;
+		}
+		remove_rec(root, key);
 		--size;
-		return remove_rec(root, key);
+		return  true;
 	}
 
 	void map(V (*f)(const K&))
