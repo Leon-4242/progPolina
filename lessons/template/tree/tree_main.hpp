@@ -230,3 +230,12 @@ void Tree<K, V>::remove_rec(Tree<K, V>::Node* curr, const K& key)
 	}
 }
 
+template<typename K, typename V>
+bool Tree<K, V>::empty() const
+{
+	if (size == 0)
+		return true;
+	else
+		return false;
+}
+
