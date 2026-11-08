@@ -72,6 +72,7 @@ class Tree
 	V& operator[] (const K& key);
 	bool remove (const K& key);
 	void map(V (*f)(const K&));
+	std::size_t size() const;
 	bool empty() const;
 
 	private:
