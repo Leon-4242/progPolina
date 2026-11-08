@@ -229,6 +229,11 @@ void Tree<K, V>::remove_rec(Tree<K, V>::Node* curr, const K& key)
 		delete buff;
 	}
 }
+template<typename K, typename V>
+std::size_t Tree<K, V>::size() const
+{
+	return size;
+}
 
 template<typename K, typename V>
 bool Tree<K, V>::empty() const
