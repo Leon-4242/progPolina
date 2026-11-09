@@ -50,6 +50,11 @@ class Tree
 		
 		std::pair<const K &, V &> operator* ();
 	};
+	class reverse_iterator
+	{
+		//TODO
+		.
+	};
 	
 	public:
 	Tree();

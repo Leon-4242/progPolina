@@ -238,9 +238,6 @@ std::size_t Tree<K, V>::size() const
 template<typename K, typename V>
 bool Tree<K, V>::empty() const
 {
-	if (size == 0)
-		return true;
-	else
-		return false;
+	return size == 0;
 }
 
