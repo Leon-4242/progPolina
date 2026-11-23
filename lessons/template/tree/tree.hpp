@@ -52,8 +52,35 @@ class Tree
 	};
 	class reverse_iterator
 	{
-		//TODO
-		.
+	private:
+		iterator current_it; 
+
+	public:
+		reverse_iterator() : current_it(nullptr, 0, nullptr) {}
+		reverse_iterator(iterator it) : current_it(it) {}
+
+		std::pair<const K &, V &> operator* ()
+		{
+			iterator temp = current_it;
+			--temp;
+			return *temp;
+		}
+
+		reverse_iterator & operator++ ()
+		{
+			--current_it;
+			return *this;
+		}
+
+		bool operator == (const reverse_iterator & other) const
+		{
+			return current_it == other.current_it;
+		}
+
+		bool operator != (const reverse_iterator & other) const
+		{
+			return current_it != other.current_it;
+		}
 	};
 	
 	public:
@@ -67,6 +94,16 @@ class Tree
 
 	iterator begin() const;
 	iterator end() const;
+
+	reverse_iterator rbegin() const
+	{
+		return end(); 
+	}
+
+	reverse_iterator rend() const
+	{
+		return begin(); 
+	}
 
     void clear();
     bool push(const K& key, const V& val);
@@ -83,7 +120,7 @@ class Tree
 	private:
 	//data
 	Node* root;
-	std::size_t size;
+	std::size_t tree_size;
 
 	//static methods
 	static void clearNodeRec(Node* curr);
