@@ -98,5 +98,5 @@ Tree<K, V>::iterator Tree<K, V>::begin() const
 template<typename K, typename V>
 Tree<K, V>::iterator Tree<K, V>::end() const
 {
-	return iterator(nullptr, size, this);
+	return iterator(nullptr, tree_size, this);
 }	
