@@ -1,6 +1,6 @@
 template<typename K, typename V>
 Tree<K, V>::Tree():
-	root(nullptr), size(0)
+	root(nullptr), tree_size(0)
 {
 }
 
@@ -9,7 +9,7 @@ Tree<K, V>::~Tree()
 {
 	this->clear();
 	root = nullptr;
-	size = 0;
+	tree_size = 0;
 }
 
 template<typename K, typename V>
@@ -18,12 +18,12 @@ Tree<K, V>::Tree(const Tree<K, V> & t)
 	if (!t.root)
 	{
 		root = nullptr;
-		size = 0;
+		tree_size = 0;
 	}
 	else
 	{
 		copy_rec(nullptr, &root, t.root);
-		size = t.size;
+		tree_size = t.tree_size;
 	}
 }
 
@@ -36,7 +36,7 @@ Tree<K, V> & Tree<K, V>::operator= (const Tree<K, V> & t)
 
 		root = nullptr;
 		copy_rec(nullptr, &root, t.root);
-		size = t.size;
+		tree_size = t.tree_size;
 	}
 	return *this;
 }
@@ -48,8 +48,8 @@ Tree<K, V>::Tree(Tree<K, V> && t)
 	root = t.root;
 	t.root = nullptr;
 
-	size = t.size;
-	t.size = 0;
+	tree_size = t.tree_size;
+	t.tree_size = 0;
 }
 
 template<typename K, typename V>
@@ -62,8 +62,8 @@ Tree<K, V> & Tree<K, V>::operator= (Tree<K, V> && t)
 		root = t.root;
 		t.root = nullptr;
 
-		size = t.size;
-		t.size = 0;
+		tree_size = t.tree_size;
+		t.tree_size = 0;
 	}
 	return *this;
 }
@@ -73,7 +73,7 @@ void Tree<K, V>::clear()
 {
 	clearNode(root);
     root = nullptr;
-	size = 0;
+	tree_size = 0;
 }
 
 template<typename K, typename V>
@@ -85,7 +85,7 @@ bool Tree<K, V>::push(const K& key, const V& val)
 		return false;
 	}
     root = push(root, nullptr, key, val);
-	++size;
+	++tree_size;
 	return true;
 }
 
@@ -156,7 +156,7 @@ bool Tree<K, V>::remove (const K& key)
 		return false;
 	}
 	remove_rec(root, key);
-	--size;
+	--tree_size;
 	return  true;
 }
 
@@ -232,12 +232,12 @@ void Tree<K, V>::remove_rec(Tree<K, V>::Node* curr, const K& key)
 template<typename K, typename V>
 std::size_t Tree<K, V>::size() const
 {
-	return size;
+	return tree_size;
 }
 
 template<typename K, typename V>
 bool Tree<K, V>::empty() const
 {
-	return size == 0;
+	return tree_size == 0;
 }
 
