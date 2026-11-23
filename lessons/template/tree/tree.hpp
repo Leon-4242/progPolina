@@ -52,12 +52,13 @@ class Tree
 	};
 	class reverse_iterator
 	{
-	private:
 		iterator current_it; 
 
 	public:
 		reverse_iterator() : current_it(nullptr, 0, nullptr) {}
-		reverse_iterator(iterator it) : current_it(it) {}
+		reverse_iterator(iterator it) : current_it(it) 
+	{
+	}
 
 		std::pair<const K &, V &> operator* ()
 		{
