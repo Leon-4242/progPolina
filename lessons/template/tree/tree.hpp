@@ -6,9 +6,9 @@
 #include <utility>
 
 //TODO:
-//  std::size_t size () const;
-//  bool empty () const;
-//Добавить reverse begin; reverse end;(+новые итераторы)            
+//  std::size_t size () const;									+
+//  bool empty () const;										+
+//Добавить reverse begin; reverse end;(+новые итераторы)        +    
 //Опционально: ещё const begin и const end;
 
 template<typename K, typename V>
@@ -33,54 +33,68 @@ class Tree
 		const V & value() const;
  		bool operator < (const Node& other) const;
 	};
-
-	public: // добавлено: итератор должен быть виден снаружи
-	class iterator
+	
+	class base_iterator
 	{
 		Node * curr;
 		std::size_t k;
 		const Tree * origin; // изменено: было Tree *
 
 		public:
-		iterator(Node * n, std::size_t k, const Tree * orig);
-		iterator & operator++ ();
-		iterator & operator-- ();
-		bool operator == (const iterator & it) const;
-		bool operator != (const iterator & it) const;
+		base_iterator(Node * n, std::size_t k, const Tree * orig);
+		base_iterator & move_right ();
+		base_iterator & move_left ();
+		bool operator == (const base_iterator & it) const;
+		bool operator != (const base_iterator & it) const;
 		
 		std::pair<const K &, V &> operator* ();
 	};
-	class reverse_iterator
-	{
-		iterator current_it; 
 
-	public:
-		reverse_iterator() : current_it(nullptr, 0, nullptr) {}
-		reverse_iterator(iterator it) : current_it(it) 
-	{
-	}
+	public: // добавлено: итератор должен быть виден снаружи
 
-		std::pair<const K &, V &> operator* ()
+	class iterator: public base_iterator
+	{
+		public:
+		iterator(Node * n, std::size_t k, const Tree * orig): base_iterator(n, k, orig) {}
+		iterator & operator++ ()
 		{
-			iterator temp = current_it;
-			--temp;
-			return *temp;
+			return this->move_right();
 		}
-
+		iterator & operator-- ()
+		{
+			return this->move_left();
+		}
+	};
+	class reverse_iterator: public base_iterator
+	{
+		public:
+		reverse_iterator(Node * n, std::size_t k, const Tree * orig): base_iterator(n, k, orig) {}
 		reverse_iterator & operator++ ()
 		{
-			--current_it;
-			return *this;
+			return this->move_left();
 		}
-
-		bool operator == (const reverse_iterator & other) const
+		reverse_iterator & operator-- ()
 		{
-			return current_it == other.current_it;
+			return this->move_right();
 		}
-
-		bool operator != (const reverse_iterator & other) const
+	};
+	class const_iterator: public base_iterator
+	{
+		public:
+		const_iterator(Node * n, std::size_t k, const Tree * orig): base_iterator(n, k, orig) {}
+		const_iterator & operator++ ()
 		{
-			return current_it != other.current_it;
+			return this->move_right();
+		}
+		const_iterator & operator-- ()
+		{
+			return this->move_left();
+		}
+		
+		std::pair<const K &, V &> operator* () = delete;
+		std::pair<const K &, const V &> operator* () const
+		{
+			return std::pair<const K &, const V &> (this->curr->key(), this->curr->value());
 		}
 	};
 	
@@ -96,15 +110,8 @@ class Tree
 	iterator begin() const;
 	iterator end() const;
 
-	reverse_iterator rbegin() const
-	{
-		return end(); 
-	}
-
-	reverse_iterator rend() const
-	{
-		return begin(); 
-	}
+	reverse_iterator rbegin() const;
+	reverse_iterator rend() const;
 
     void clear();
     bool push(const K& key, const V& val);
